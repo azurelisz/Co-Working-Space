@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block content %}
+{% endblock content %}
+
+{% block check_in %}
+<div class="card" style="width: 18rem;">
+    <!-- {% load static %}<img class="card-img-top" src="{% static "images/co-working1.jpg" %}" alt="Card image cap"> -->
+    <div class="card-body">
+        <h5 class="card-title">Check-in</h5>
+        <p class="card-text"></p>
+    </div>
+    <form action="{% url 'check_in' %}" method="post">
+        {% csrf_token %}
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="form-group">
+                    <label for="">Member-name:</label>
+                    <input type="text" class="form-control ml-3" id="member_name" name="member_name"
+                        value="{{member_name}}">
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="zone_id">Zone:</label>
+                        <select class="form-control" id="zone_id" name="zone_id" required>
+                            <option value=''>---Select Zone---</option>
+                            {% for zone in zones %}
+                            <option value='{{zone.id}}' {% if seat_booking.zone_id == zone.id %}selected{% endif %}>
+                                {{zone.title}} ({{zone.price}}/คน/ชั่วโมง)</option>
+                            {% endfor %}
+                        </select>
+                        <!-- <input type="" class="form-control ml-3" id="choosed_zone" name="choosed_zone"
+                        value="{{choosed_zone}}" placeholder="Select Zone"> -->
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <button type="submit" class="btn btn-primary ml-3">Check-in</button>
+            </li>
+        </ul>
+    </form>
+</div>
+
+{% endblock check_in %}
+
+{% block check_out %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Check-out</h5>
+        <p class="card-text"></p>
+        <form action="{% url 'check_out' %}" method="post">
+            {% csrf_token %}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="form-group">
+                        <label for="">Member-name:</label>
+                        <input type="text" class="form-control ml-3" id="member_name" name="member_name"
+                            value="{{member_name}}">
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="form-group">
+                        <label for="">Balance:</label>
+                        <input type="text" class="form-control ml-3" id="balance" name="balance"
+                            value="{{member.money}}" disabled placeholder="Total Balance">
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <button type="submit" class="btn btn-primary ml-3">Check-out</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+{% endblock check_out %}
+
+{% block search_member %}
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Search</h5>
+        <p class="card-text"></p>
+        <form class="form-inline" method="GET" action="{% url 'search_member' %}">
+            {% csrf_token %}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="form-group">
+                        <label for="search">Member:</label>
+                        <input type="text" class="form-control ml-3" id="search" name="search"
+                            placeholder="Enter Member-name" value="{{search}}">
+                    </div>
+                </li>
+                {% for mem in member_search %}
+                <li class="list-group-item">
+                    <div class="form-group">
+                        <label for="">Balance:</label>
+                        <input type="text" class="form-control ml-3" id="balance" name="balance"
+                            value="{{mem.money}}" disabled>
+                    </div>
+                </li>
+                {% endfor %}
+                <li class="list-group-item">
+                    <button type="submit" class="btn btn-primary ml-3">Search</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+{% endblock search_member %}
+
+{% block check_in_out_log %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Log</h5>
+        <p class="card-text"></p>
+
+            <ul class="list-group list-group-flush">
+                {% for b in booking %}
+                    {% for m in members %}
+                        <li class="list-group-item">
+                            {{m.first_name}} <h5>check_in</h5> {{b.time_check_in}}
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+    </div>
+</div>
+{% endblock check_in_out_log %}
